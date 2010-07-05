@@ -1,0 +1,80 @@
+uapvHelpPlugin
+
+Features
+========
+
+uapvHelpPlugin displays a link to the documentation of your symfony actions when
+it exists. [The Markdown syntax][1] is used to help you write theses files in an
+easy-to-read and easy-to-write way. Theses files are also parsed with PHP to
+allow you to use any symfony helpers you want.
+
+uapvHelpPlugin also use the symfony cache to prevent unneeded markown parsing.
+Don't forget to use 'symfony cc' whenever you modify the documentation files.
+
+
+How to install ?
+================
+
+    git clone git://github.com/UAPV/uapvHelpPlugin.git plugins/uapvHelpPlugin
+    symfony plugin:publish-assets
+
+How to use ?
+============
+
+1) Add this helper to your layout :
+
+       <?php use_helper ('AutoHelp') ?>
+       <?php echo help_link () ?>
+
+2) Create a 'doc' directory in the module you want to document, for example 'apps/frontend/modules/myModule/doc'
+
+3) Create a 'fr' directory to add a french documentation, for example 'apps/frontend/modules/myModule/doc/fr'
+
+4) To document the index action, create the file 'app/frontend/modules/myModule/doc/fr/index.mkd'
+
+5) Enable the plugin by adding this line to the 'setup()' method in your 'config/ProjectConfiguration.class.php' file :
+
+       $this->enablePlugins('uapvHelpPlugin');
+
+Advanced use
+============
+
+Enabling a fall back documentation
+----------------------------------
+
+If you want to display a documentation link on the page even if there is no
+specific help for the requested module/action, create the file
+'apps/frontend/doc/fr/index.mkd'.  
+
+Adding links to other documentation pages in your markdown files
+----------------------------------------------------------------
+
+Use this helper function in your markdown files to add a link to the 'list' action of the 'pages' module :
+
+    Hey, have a look <?php echo link_to_help ('here for more details', 'pages', 'list'); ?>
+
+Specifying the default language
+-------------------------------
+
+uapvHelpPlugin will use the 'Accept-Language' request header to find the correct
+documentation page to use for your visitors. However, if this page does not
+exist or if there is no 'Accept-Language' header, uapvHelpPlugin will use the
+'default_culture' parameter defined in your 'i18n.yml' configuration. Make sure
+it is correct.
+
+
+Creating a documentation index
+------------------------------
+
+??
+
+Future improvements
+===================
+
+* documentation search form
+* documentation index
+* automatic cache invalidation
+
+
+
+[1]: http://daringfireball.net/projects/markdown/syntax  
