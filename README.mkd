@@ -21,20 +21,30 @@ How to install ?
 How to use ?
 ============
 
-1) Add this helper to your layout :
-
-       <?php use_helper ('AutoHelp') ?>
-       <?php echo help_link () ?>
-
-2) Create a 'doc' directory in the module you want to document, for example 'apps/frontend/modules/myModule/doc'
-
-3) Create a 'fr' directory to add a french documentation, for example 'apps/frontend/modules/myModule/doc/fr'
-
-4) To document the index action, create the file 'app/frontend/modules/myModule/doc/fr/index.mkd'
-
-5) Enable the plugin by adding this line to the 'setup()' method in your 'config/ProjectConfiguration.class.php' file :
+1) Enable the plugin by adding this line to the 'setup()' method in your 'config/ProjectConfiguration.class.php' file :
 
        $this->enablePlugins('uapvHelpPlugin');
+
+2) In your setting.yml :
+    
+   * Enable the uapvHelpPage module :
+
+         enabled_modules: [default, uapvHelpPage]
+
+   * Add 'AutoHelp' to standard_helpers to avoid writing "use_helper('AutoHelp')" everywhere
+    
+         standard_helpers: [Partial, Cache, AutoHelp]
+
+4) Use this helper in your layout :
+
+       <?php echo help_link () ?>
+
+5) Create a 'doc' directory in the module you want to document, for example 'apps/frontend/modules/myModule/doc'
+
+6) Create a 'fr' directory to add a french documentation, for example 'apps/frontend/modules/myModule/doc/fr'
+
+7) To document the index action, create the file 'app/frontend/modules/myModule/doc/fr/index.mkd'
+
 
 Advanced use
 ============
@@ -51,7 +61,11 @@ Adding links to other documentation pages in your markdown files
 
 Use this helper function in your markdown files to add a link to the 'list' action of the 'pages' module :
 
-    Hey, have a look <?php echo link_to_help ('here for more details', 'pages', 'list'); ?>
+    Hey, have a look <?php echo link_to_help ('here for more details', 'pages/list'); ?>o
+
+You can also link to the user documentation from your Symfony views :
+
+    <?php echo link_to_help ('Follow this link to learn more about this feature', 'pages/list') ?>
 
 Specifying the default language
 -------------------------------
@@ -62,6 +76,20 @@ exist or if there is no 'Accept-Language' header, uapvHelpPlugin will use the
 'default_culture' parameter defined in your 'i18n.yml' configuration. Make sure
 it is correct.
 
+
+Linking to a specific documentation anchor
+------------------------------------------
+
+To add an anchor in your documentation follow the syntax [described here][2] :
+
+Example :
+
+    Header 1            {#my_anchor_id}
+    ========
+
+Then use this link helper :
+
+    <?php echo link_to_help ('pages/list#my_anchor_id') ?>
 
 Creating a documentation index
 ------------------------------
@@ -78,3 +106,4 @@ Future improvements
 
 
 [1]: http://daringfireball.net/projects/markdown/syntax  
+[2]: http://michelf.com/projects/php-markdown/extra/#header-id

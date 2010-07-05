@@ -1,0 +1,19 @@
+
+/************** Help **************/
+
+#help {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
+#help a {
+  width: 60px;
+  height: 60px;
+  display: block;
+  text-indent: -5000px;
+  background: transparent url('../images/help_corner.png') no-repeat left bottom;
+  opacity: 0.6;
+}
+#help a:hover {
+  opacity: 1;
+}
