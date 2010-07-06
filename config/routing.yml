@@ -1,0 +1,4 @@
+
+uapvHelpShowPage:
+  url: /help/page/:help_module/:help_action
+  param: { module: uapvHelpPage, action: show }
