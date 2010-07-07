@@ -1,4 +1,5 @@
 
 uapvHelpShowPage:
-  url: /help/page/:help_module/:help_action
+  url: /help/page/:file
   param: { module: uapvHelpPage, action: show }
+  requirements: { file: .* }

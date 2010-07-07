@@ -1,0 +1,7 @@
+autoload:
+  Markdown:
+    name:           PHPMarkdown
+    path:           <?php echo realpath(dirname(__FILE__).'/../lib')."\n" ?>
+    recursive:      true
+    exclude:        [vendor]
+

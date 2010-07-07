@@ -3,41 +3,33 @@
 /**
  *
  */
-function help_link ()
+function help_link ($label = 'help')
 {
+  global $sf_context;
+
   $context = sfContext::getInstance ();
   $module  = $context->getModuleName ();
   $action  = $context->getActionName ();
 
   // check if there is a doc file for this module/action
-  if (false /* TODO */)
-    return '';
-
-  $html = '<div id="help">'.link_to_help ('help', $module.'/'.$action).'</div>';
+  $helpFinder = new uapvHelpFinder (sfContext::getInstance ());
+  if (($url = $helpFinder->resolve ($module.'/'.$action)) !== null)
+   return '<div id="help">'.link_to_help ($label, $url).'</div>';
  
-  return $html;
+  return '';
 }
 
 /**
  *
- * @param  string $name          name of the link, i.e. string to appear between the <a> tags
- * @param  string $internal_uri  'module/action' or '@rule' of the action
- * @param  array  $options       additional HTML compliant <a> tag parameters
+ * @param  string $name     name of the link, i.e. string to appear between the <a> tags
+ * @param  string $doc_uri  'module/action' or '@rule' of the action
+ * @param  array  $options  additional HTML compliant <a> tag parameters
+ *
  * @return string XHTML compliant <a href> tag
- * @see    link_to
+ *
+ * @see    link_to for $option
  */
-function link_to_help ($name, $internal_uri, $options = array ())
+function link_to_help ($name, $doc_uri, $options = array ())
 {
-  $url = '@uapvHelpShowPage';
-  if (preg_match ('/^(([^#\/]*)(\/([^#]*))?)?(#(.*))?$/', $internal_uri, $exploded_url))
-  {
-    if (array_key_exists ('2', $exploded_url))
-      $url .= '?help_module='.$exploded_url[2];
-    if (array_key_exists ('4', $exploded_url))
-      $url .= '&help_action='.$exploded_url[4];
-    if (array_key_exists ('6', $exploded_url))
-      $options ['anchor'] = $exploded_url[6];
-  }
-
-  return link_to ($name, $url, $options);
+  return link_to ($name, '@uapvHelpShowPage?file='.$doc_uri, $options);
 }

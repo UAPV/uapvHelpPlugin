@@ -7,8 +7,18 @@ class uapvHelpPageActions extends sfActions
 {
   public function executeShow (sfWebRequest $request)
   {
-    $this->help_module = $request->getParameter ('help_module');
-    $this->help_action = $request->getParameter ('help_action');
+    $helpFinder = new uapvHelpFinder ($this->getContext ());
+
+    if (($filename = $helpFinder->fileExists($request->getParameter ('file'))) !== false)
+    {
+      require_once 'PhpMarkdown/markdown.php';
+
+      ob_start ();
+      include $helpFinder->getHelpRootDir ().$filename;
+      $this->htmlDoc = Markdown (ob_get_clean ());
+    }
+    else
+        return $this->redirect404 ();
   }
 }
  

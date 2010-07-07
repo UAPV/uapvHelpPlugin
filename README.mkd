@@ -43,9 +43,9 @@ How to use ?
 
        <?php echo help_link () ?>
 
-5) Create a 'doc' directory in the module you want to document, for example 'apps/frontend/modules/myModule/doc'
+5) Create a 'doc' directory in the module you want to document, for example 'apps/frontend/doc'
 
-6) Create a 'fr' directory to add a french documentation, for example 'apps/frontend/modules/myModule/doc/fr'
+6) Create a 'fr' directory to add a french documentation, for example 'apps/frontend/doc/fr'
 
 7) To document the index action, create the file 'app/frontend/modules/myModule/doc/fr/index.mkd'
 

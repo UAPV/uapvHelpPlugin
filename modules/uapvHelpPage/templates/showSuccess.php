@@ -1,3 +1,1 @@
-Hello
-<?php echo $help_module ?>
-<?php echo $help_action ?>
+<?php echo $htmlDoc ?>

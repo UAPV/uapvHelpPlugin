@@ -17,5 +17,6 @@ class uapvHelpPluginConfiguration extends sfPluginConfiguration
    */
   public function initialize()
   {
+    sfToolkit::addIncludePath(array(realpath(dirname(__FILE__).'/../lib/vendor')));
   }
 }
