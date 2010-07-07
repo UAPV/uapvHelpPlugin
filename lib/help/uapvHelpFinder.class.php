@@ -56,26 +56,6 @@ class uapvHelpFinder {
   }
 
   /**
-   * Returns the culture configured at the project level
-   *
-   * @return string
-   */
-  public function getDefaultLanguage ()
-  {
-    return ;
-  }
-
-  /**
-   * Returns the user culture based
-   *
-   * @return string
-   */
-  public function getPreferedLanguage ()
-  {
-    return $user->getCulture();
-  }
-
-  /**
    * Find the documentation file corresponding to a module and(?) action
    *
    * @param string $file    By convention : 'module_name/action_name' (without .mkd)
