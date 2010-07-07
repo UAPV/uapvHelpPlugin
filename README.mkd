@@ -37,7 +37,7 @@ How to use ?
 
 3) Edit your view.yml to load uapvHelpPlugin stylesheet :
 
-         stylesheets:    [main, /uapvHelpPlugin/css/main.css]
+         stylesheets:    [main, /uapvHelpPlugin/css/widget.css]
 
 4) Use this helper in your layout :
 
