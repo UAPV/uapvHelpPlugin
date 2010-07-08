@@ -1,3 +1,2 @@
 all:
   layout: %SF_ROOT_DIR%/plugins/uapvHelpPlugin/templates/uapvHelpLayout
-  stylesheets: [/uapvHelpPlugin/css/main.css]

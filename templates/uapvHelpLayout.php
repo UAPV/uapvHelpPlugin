@@ -2,6 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 
+<?php use_stylesheet('/uapvHelpPlugin/css/elastic.css') ?>
+<?php use_stylesheet('/uapvHelpPlugin/css/elastic.print.css') ?>
+<?php use_stylesheet('/uapvHelpPlugin/css/main.css') ?>
+
+<?php use_javascript('/uapvHelpPlugin/css/jquery.js') ?>
+
 <?php include_http_metas() ?>
 <?php include_metas() ?>
 <?php include_javascripts() ?>
@@ -13,7 +19,9 @@
 </head>
 <body>
 
+<div id="page">
   <?php echo $sf_content ?>
+</div>
 
 </body>
 </html>
