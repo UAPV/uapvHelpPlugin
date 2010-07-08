@@ -70,17 +70,17 @@ class uapvHelpFinder {
     $pos = strlen($file);
     while ($file != '')
     {
-      if ($this->fileExists ($file))
+      if ($this->fileExists ($file) !== false)
         return $file;
 
-      if ($this->fileExists ($file.'/index'))
+      if ($this->fileExists ($file.'/index') !== false)
         return $file.'/index';
 
       $pos = strrpos ($file, '/');
       $file = substr ($file, 0, $pos);
     }
     
-    if ($this->fileExists ('index')) // last solution ?
+    if ($this->fileExists ('index') !== false) // last solution ?
       return 'index';
 
     // nothing was found
@@ -98,7 +98,7 @@ class uapvHelpFinder {
     foreach ($this->languages as $lang)
     {
       $filename = $lang.'/'.$file.'.mkd';
-      if (file_exists ($this->baseDocDir.$filename))
+      if (file_exists ($this->baseDocDir.$filename) === true)
         return $filename;
     }
 

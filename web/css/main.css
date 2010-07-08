@@ -3,7 +3,7 @@ html {
   color: #4B4741;
 }
 body {
-  font: 1em Georgia, "Times New Roman", serif;
+  font: 0.9em Georgia, "Times New Roman", serif;
   font-size: 18px;
   color: #333;
   text-align: left;
@@ -13,11 +13,12 @@ body {
 #page {
   width: 900px;
   margin: 1em auto;
-  padding: 1em ;
+  padding: 2em ;
   background: #FFF;
   -moz-border-radius: 	 0.5em;
   -webkit-border-radius: 0.5em;
   border-radius:				 0.5em;
+  text-align: justify;
 }
 
 code {
@@ -42,6 +43,7 @@ a:hover {
 h1 {
 	font-size: 2em;
 	padding: 20px 0px 15px;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 
 h2
@@ -53,4 +55,13 @@ h2
 
 p {
   margin-bottom: 10px;
+}
+
+#page_toc {
+  font-size: 0.9em;
+  float: right;
+  margin: 1em 0 1em 2em;
+  padding: 0.7em;
+  background: #FDFDFD;
+  border: 1px solid rgba(0,0,0,0.05);
 }

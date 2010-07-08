@@ -5,8 +5,6 @@
  */
 function help_link ($label = 'help')
 {
-  global $sf_context;
-
   $context = sfContext::getInstance ();
   $module  = $context->getModuleName ();
   $action  = $context->getActionName ();
@@ -32,4 +30,12 @@ function help_link ($label = 'help')
 function link_to_help ($name, $doc_uri, $options = array ())
 {
   return link_to ($name, '@uapvHelpShowPage?file='.$doc_uri, $options);
+}
+
+
+function include_help_partial ($templateName)
+{
+  $helpFinder = new uapvHelpFinder (sfContext::getInstance ());
+
+  return include_partial ('/'.$helpFinder->getHelpRootDir ().'/'.$templateName);
 }

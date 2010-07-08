@@ -7,6 +7,7 @@
 <?php use_stylesheet('/uapvHelpPlugin/css/main.css') ?>
 
 <?php use_javascript('/uapvHelpPlugin/js/jquery.js') ?>
+<?php use_javascript('/uapvHelpPlugin/js/jquery.toc-1.1.0.js') ?>
 
 <?php include_http_metas() ?>
 <?php include_metas() ?>
@@ -17,9 +18,24 @@
 <link rel="shortcut icon" href="/favicon.ico" />
 
 </head>
-<body>
+<body id="uapvHelpPlugin">
+
+  <?php //echo include_help_partial ('_header.mkd'); ?>
 
 <div id="page">
+
+  <div id="page_toc"></div>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('#page_toc').toc({
+        context: '#page',
+        autoId: true
+      });
+      if ($('#page_toc ul').children().length == 0)
+        $('#page_toc').remove ();
+    });
+  </script>
+
   <?php echo $sf_content ?>
 </div>
 
