@@ -32,10 +32,17 @@ function link_to_help ($name, $doc_uri, $options = array ())
   return link_to ($name, '@uapvHelpShowPage?file='.$doc_uri, $options);
 }
 
+function include_help_partial_if_exists ($templateName)
+{
+  $helpFinder = new uapvHelpFinder (sfContext::getInstance ());
+  return ($helpFinder->fileExists ($templateName) !== false ? include_help_partial ($templateName) : '');
+}
 
 function include_help_partial ($templateName)
 {
   $helpFinder = new uapvHelpFinder (sfContext::getInstance ());
-
-  return include_partial ('/'.$helpFinder->getHelpRootDir ().'/'.$templateName);
+  $templateName = $helpFinder->fileExists ($templateName);
+  $view = new uapvMarkdownPartialView (sfContext::getInstance (), 'uapvHelpPage', $templateName, '');
+  $view->setDirectory ($helpFinder->getHelpRootDir ());
+  return $view->render();
 }
