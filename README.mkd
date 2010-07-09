@@ -95,6 +95,12 @@ Then use this link helper :
 
     <?php echo link_to_help ('pages/list#my_anchor_id') ?>
 
+How to add a header and footer on every page
+--------------------------------------------
+
+Add a file named "_header.mkd" or "_footer.mkd" in your doc/[lang]/ directory.
+This file can use markdown syntax.
+
 Creating a documentation index
 ------------------------------
 
