@@ -29,7 +29,8 @@ function help_link ($label = 'help')
  */
 function link_to_help ($name, $doc_uri, $options = array ())
 {
-  return link_to ($name, '@uapvHelpShowPage?file='.$doc_uri, $options);
+  $baseUrl = sfContext::getInstance ()->getController()->genUrl('@uapvHelpShowPage?file=');
+  return link_to ($name, $baseUrl.$doc_uri, $options);
 }
 
 function include_help_partial_if_exists ($templateName)
