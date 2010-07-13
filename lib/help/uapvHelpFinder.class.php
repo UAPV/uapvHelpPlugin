@@ -12,7 +12,7 @@ class uapvHelpFinder {
   protected $languages = array ();
 
   /* @var $user array Available language for the documentation */
-  protected $Availablelanguages = array ();
+  protected $availableLanguages = array ();
 
   /* @var $baseDocDir string */
   protected $baseDocDir = null;
