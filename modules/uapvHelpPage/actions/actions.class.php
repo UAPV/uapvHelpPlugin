@@ -10,7 +10,7 @@ class uapvHelpPageActions extends sfActions
     //sfConfig::set ('mod_uapvHelpPage_view_class', 'uapvPHPMarkdown');
     $this->helpFinder = new uapvHelpFinder ($this->getContext ());
     $docFile = $request->getParameter ('file');
-    $filename = $this->helpFinder->fileExists ($docFile);
+    $filename = $this->helpFinder->fileExists ($docFile); // test exact match
 
     if ($filename === false)
     {
@@ -22,8 +22,9 @@ class uapvHelpPageActions extends sfActions
       }
       else
         return $this->forward404 ();
-
     }
+
+    $this->breadcrumb = $this->helpFinder->getBreadcrumb ($docFile);
 
     // TODO : refactor markdown parsing !
     //$this->setTemplate ($this->helpFinder->getHelpRootDir ().$filename);

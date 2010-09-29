@@ -23,35 +23,16 @@
 
 <div id="page">
 
-  <div id="doc_header">  
-    <?php echo include_help_partial_if_exists ('_header'); ?>
-  </div>
 
-  <div id="doc_navigation"> 
-    Navigation : 
-    <a href="sqd">qsqsd</a> &gt;
-    <a href="sqd">q sqd</a> &gt;
-    <a href="sqd">qsq sdqsd</a>
-  </div>
+    <div id="doc_header">
+      <?php echo include_help_partial_if_exists ('_header'); ?>
+    </div>
 
-  <div id="doc_content">
-    <div id="doc_toc"></div>
-    <script type="text/javascript">
-      $(document).ready(function() {
-        $('#doc_toc').toc({
-          context: '#page',
-          autoId: true
-        });
-        if ($('#doc_toc ul').children().length == 0)
-          $('#doc_toc').remove ();
-      });
-    </script>
     <?php echo $sf_content ?>
-  </div>
 
-  <div id="doc_footer">  
-    <?php echo include_help_partial_if_exists ('_footer'); ?>
-  </div>
+    <div id="doc_footer">
+      <?php echo include_help_partial_if_exists ('_footer'); ?>
+    </div>
 
 </div>
 

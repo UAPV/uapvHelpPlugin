@@ -115,4 +115,59 @@ class uapvHelpFinder {
     return $this->baseDocDir;
   }
 
+  public function getPageTitle ($page)
+  {
+    $fileName = $this->fileExists($page);
+    if ($fileName === false)
+      return null;
+
+    $pageContent = file_get_contents($this->baseDocDir.'/'.$fileName);
+
+    $matches = array ();
+
+
+    if (preg_match('{^(.+?)[ ]*\n=+[ ]*}mx', $pageContent, $matches)     == 1 || // Setext style (undescored with "=")
+        preg_match ('{^\#[ ]*(.+?)[ ]*\#$\n+}xm', $pageContent, $matches) == 1 ) // atx style ("# title")
+    {
+      return $matches[1];
+    }
+    else
+      return $page;
+  }
+
+  public function getBreadcrumb ($file)
+  {
+    $breadcrumb = array ();
+
+    // Let's find the path by traversing toward documentation root dir
+    $pos = strlen($file);
+    while ($file != '')
+    {
+      if ($this->fileExists ($file.'/index') !== false)
+        $breadcrumb [] = array (
+          'label' => $this->getPageTitle($file.'/index'),
+          'path'  => $file.'/index',
+      );
+
+      if ($this->fileExists ($file) !== false)
+        $breadcrumb [] = array (
+          'label' => $this->getPageTitle($file),
+          'path'  => $file,
+        );
+
+      $pos = strrpos ($file, '/');
+      $file = substr ($file, 0, $pos);
+    }
+
+
+    if ($this->fileExists ('/index') !== false)
+      $breadcrumb [] = array (
+        'label' => $this->getPageTitle('/index'),
+        'path'  => $file.'/index',
+      );
+
+
+    return array_reverse ($breadcrumb);
+  }
+
 }
