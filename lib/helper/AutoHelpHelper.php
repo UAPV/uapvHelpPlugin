@@ -1,7 +1,8 @@
 <?php
 
 /**
- *
+ * This helper tries to find a help page corresponding to the current module/action
+ * and return a 
  */
 function help_link ($label = 'help')
 {
@@ -10,14 +11,18 @@ function help_link ($label = 'help')
   $action  = $context->getActionName ();
 
   // check if there is a doc file for this module/action
-  $helpFinder = new uapvHelpFinder (sfContext::getInstance ());
+  $helpFinder = new uapvHelpFinder ($context);
   if (($url = $helpFinder->resolve ($module.'/'.$action)) !== null)
-   return '<div id="help">'.link_to_help ($label, $url).'</div>';
+  {
+    $context->getResponse()->addStyleSheet ('/uapvHelpPlugin/css/widget.css', sfWebResponse::FIRST);
+    return '<div id="help">'.link_to_help ($label, $url).'</div>';
+  }
  
   return '';
 }
 
 /**
+ *
  *
  * @param  string $name     name of the link, i.e. string to appear between the <a> tags
  * @param  string $doc_uri  'module/action' or '@rule' of the action
@@ -29,7 +34,8 @@ function help_link ($label = 'help')
  */
 function link_to_help ($name, $doc_uri, $options = array ())
 {
-  $baseUrl = sfContext::getInstance ()->getController()->genUrl('@uapvHelpShowPage?file=');
+  $helpFinder = new uapvHelpFinder (sfContext::getInstance ());
+  $baseUrl = $helpFinder->generateUrl ($uri);
   return link_to ($name, $baseUrl.$doc_uri, $options);
 }
 
@@ -42,8 +48,8 @@ function include_help_partial_if_exists ($templateName)
 function include_help_partial ($templateName)
 {
   $helpFinder = new uapvHelpFinder (sfContext::getInstance ());
-  $templateName = $helpFinder->fileExists ($templateName);
-  $view = new uapvMarkdownPartialView (sfContext::getInstance (), 'uapvHelpPage', $templateName, '');
+  $helpFinder->fileExists ($templateName);
+  $view = new uapvMarkdownPartialView (sfContext::getInstance (), 'uapvHelpPage', $helpFinder->getAbsolutePath ($templateName), '');
   $view->setDirectory ($helpFinder->getHelpRootDir ());
   return $view->render();
 }

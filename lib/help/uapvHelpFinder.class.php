@@ -17,7 +17,10 @@ class uapvHelpFinder {
   /* @var $baseDocDir string */
   protected $baseDocDir = null;
 
-  
+  /* @var $context sfContext */
+  protected $context = null;
+
+
   /**
    * Constructor
    * 
@@ -25,6 +28,8 @@ class uapvHelpFinder {
    */
   public function __construct (sfContext $context)
   {
+    $this->context = $context;
+
     $this->baseDocDir = sfconfig::get('sf_root_dir').'/apps/'
                           .$context->getConfiguration()->getApplication().'/doc/';
     foreach (glob ($this->baseDocDir.'*', GLOB_ONLYDIR) as $dir)
@@ -64,27 +69,16 @@ class uapvHelpFinder {
    */
   public function resolve ($file)
   {
-    $file = str_replace('/../', '/', $file); // TODO improve
+    if ($this->fileExists ($file) !== false)
+      return $file;
 
-    // Let's find the files by traversing toward documentation root dir
-    $pos = strlen($file);
-    while ($file != '')
-    {
-      if ($this->fileExists ($file) !== false)
-        return $file;
+    if ($file == 'index')
+      return null;
 
-      if ($this->fileExists ($file.'/index') !== false)
-        return $file.'/index';
+    if ($this->fileExists ($file.'/index') !== false)
+      return $file.'/index';
 
-      $pos = strrpos ($file, '/');
-      $file = substr ($file, 0, $pos);
-    }
-    
-    if ($this->fileExists ('index') !== false) // last solution ?
-      return 'index';
-
-    // nothing was found
-    return null;
+    return $this->resolve (substr ($file, 0, strrpos ($file, '/')));
   }
 
   /**
@@ -95,14 +89,7 @@ class uapvHelpFinder {
    */
   public function fileExists ($file)
   {
-    foreach ($this->languages as $lang)
-    {
-      $filename = $lang.'/'.$file.'.mkd';
-      if (file_exists ($this->baseDocDir.$filename) === true)
-        return $filename;
-    }
-
-    return false;
+    return file_exists ($this->getAbsolutePath ($filename));
   }
 
   /**
@@ -115,6 +102,34 @@ class uapvHelpFinder {
     return $this->baseDocDir;
   }
 
+  /**
+   * Return the absolute path of the help page after cleaning it from possible
+   * path hack...
+   *
+   * @param  $filename  Name of the help page (ex: fr/user/edit.mkd)
+   * @return string
+   */
+  public function getAbsolutePath ($filename)
+  {
+    $filename = str_replace('/../', '/', $filename); // TODO improve
+    return $this->getHelpRootDir ().$filename;
+  }
+
+  /**
+   * Generate the URL associated to the page $filename (ex: fr/admin/edit)
+   *
+   * @param  $filename    
+   * @return string
+   */
+  public function generateUrl ($filename)
+  {
+    return $this->context->getController()->genUrl('@uapvHelpShowPage?file=').$filename;
+  }
+
+  /**
+   * @param  $page
+   * @return string
+   */
   public function getPageTitle ($page)
   {
     $fileName = $this->fileExists($page);

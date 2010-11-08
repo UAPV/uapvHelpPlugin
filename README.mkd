@@ -15,39 +15,37 @@ Don't forget to use 'symfony cc' whenever you modify the documentation files.
 How to install ?
 ================
 
+1) Get the sources
+
     git clone git://github.com/UAPV/uapvHelpPlugin.git plugins/uapvHelpPlugin
     symfony plugin:publish-assets
 
-How to use ?
-============
-
-1) Enable the plugin by adding this line to the 'setup()' method in your 'config/ProjectConfiguration.class.php' file :
+2) Enable the plugin by adding this line to the 'setup()' method in your 'config/ProjectConfiguration.class.php' file :
 
        $this->enablePlugins('uapvHelpPlugin');
 
-2) In your setting.yml :
-    
+3) In your setting.yml :
+
    * Enable the uapvHelpPage module :
 
          enabled_modules: [default, uapvHelpPage]
 
-   * Add 'AutoHelp' to standard_helpers to avoid writing "use_helper('AutoHelp')" everywhere
-    
+   * Add 'AutoHelp' to the standard_helpers to avoid writing "use_helper('AutoHelp')" everywhere
+
          standard_helpers: [Partial, Cache, AutoHelp]
 
-3) Edit your view.yml to load uapvHelpPlugin stylesheet :
-
-         stylesheets:    [main, /uapvHelpPlugin/css/widget.css]
-
-4) Use this helper in your layout :
+4) Use this helper in your layout.php :
 
        <?php echo help_link () ?>
 
-5) Create a 'doc' directory in the module you want to document, for example 'apps/frontend/doc'
+How to use ?
+============
 
-6) Create a 'fr' directory to add a french documentation, for example 'apps/frontend/doc/fr'
+1) Create a 'doc' directory in the application you want to document, for example 'apps/frontend/doc'
 
-7) To document the index action, create the file 'app/frontend/modules/myModule/doc/fr/index.mkd'
+2) Create a 'fr' directory to add a french documentation, for example 'apps/frontend/doc/fr'
+
+3) To document the index action, create the file 'app/frontend/modules/myModule/doc/fr/index.mkd'
 
 
 Advanced use
@@ -95,11 +93,25 @@ Then use this link helper :
 
     <?php echo link_to_help ('pages/list#my_anchor_id') ?>
 
-How to add a header and footer on every page
---------------------------------------------
+Adding a header and footer on every page
+----------------------------------------
 
 Add a file named "_header.mkd" or "_footer.mkd" in your doc/[lang]/ directory.
 This file can use markdown syntax.
+
+
+Redirecting a user to an external documentation
+-----------------------------------------------
+
+If some or all of your document is already stored somewhere else, you will need can add exceptions by editing your app.yml
+
+all:
+  help:
+    external:
+      "account/*/edit" : http://dosi.univ-avignon.fr/foobar
+      "admin/*" : https://github.com/UAPV/uapvHelpPlugin/blob/master/README.mkd
+      "*" : http://dosi.univ-avignon.fr
+
 
 Creating a documentation index
 ------------------------------

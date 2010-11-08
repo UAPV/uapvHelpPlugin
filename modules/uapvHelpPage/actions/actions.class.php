@@ -7,30 +7,22 @@ class uapvHelpPageActions extends sfActions
 {
   public function executeShow (sfWebRequest $request)
   {
-    //sfConfig::set ('mod_uapvHelpPage_view_class', 'uapvPHPMarkdown');
-    $this->helpFinder = new uapvHelpFinder ($this->getContext ());
     $docFile = $request->getParameter ('file');
-    $filename = $this->helpFinder->fileExists ($docFile); // test exact match
+    $this->returnPage($docFile.'.mkd');
+  }
 
-    if ($filename === false)
-    {
-      // The file wasn't found. Let's search higher or in another language
-      if (null !== ($filename = $this->helpFinder->resolve ($docFile)))
-      {
-        $baseUrl = $this->getController()->genUrl('@uapvHelpShowPage?file=');
-        return $this->redirect ($baseUrl.$filename); // prevent symfo from url_encoding 'file'
-      }
-      else
+  protected function returnPage ($filename)
+  {
+    $this->helpFinder = new uapvHelpFinder ($this->getContext ());
+    if ($this->helpFinder->fileExists ($filename));
         return $this->forward404 ();
-    }
 
     $this->breadcrumb = $this->helpFinder->getBreadcrumb ($docFile);
 
     // TODO : refactor markdown parsing !
-    //$this->setTemplate ($this->helpFinder->getHelpRootDir ().$filename);
     require_once 'PhpMarkdown/markdown.php';
     ob_start ();
-    include $this->helpFinder->getHelpRootDir ().$filename;
+    include $this->helpFinder->getAbsolutePath ($filename);
     $this->htmlDoc = Markdown (ob_get_clean ());
   }
 }
