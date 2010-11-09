@@ -78,7 +78,7 @@ class uapvHelpFinder {
     if ($this->fileExists ($file.'/index') !== false)
       return $file.'/index';
 
-    return $this->resolve (substr ($file, 0, strrpos ($file, '/')));
+    return $this->resolve ($this->getParentDirectory ($file));
   }
 
   /**
@@ -89,7 +89,7 @@ class uapvHelpFinder {
    */
   public function fileExists ($file)
   {
-    return file_exists ($this->getAbsolutePath ($filename));
+    return file_exists ($this->getAbsolutePath ($file));
   }
 
   /**
@@ -106,13 +106,13 @@ class uapvHelpFinder {
    * Return the absolute path of the help page after cleaning it from possible
    * path hack...
    *
-   * @param  $filename  Name of the help page (ex: fr/user/edit.mkd)
+   * @param  $filename  Name of the help page (ex: fr/user/edit)
    * @return string
    */
   public function getAbsolutePath ($filename)
   {
     $filename = str_replace('/../', '/', $filename); // TODO improve
-    return $this->getHelpRootDir ().$filename;
+    return $this->getHelpRootDir ().$filename.'.mkd';
   }
 
   /**
@@ -132,57 +132,39 @@ class uapvHelpFinder {
    */
   public function getPageTitle ($page)
   {
-    $fileName = $this->fileExists($page);
-    if ($fileName === false)
-      return null;
-
-    $pageContent = file_get_contents($this->baseDocDir.'/'.$fileName);
+    $pageContent = file_get_contents($this->getAbsolutePath ($page));
 
     $matches = array ();
-
-
     if (preg_match('{^(.+?)[ ]*\n=+[ ]*}mx', $pageContent, $matches)     == 1 || // Setext style (undescored with "=")
         preg_match ('{^\#[ ]*(.+?)[ ]*\#$\n+}xm', $pageContent, $matches) == 1 ) // atx style ("# title")
     {
       return $matches[1];
     }
     else
-      return $page;
+      return ucfirst (basename ($page));
   }
 
   public function getBreadcrumb ($file)
   {
     $breadcrumb = array ();
 
-    // Let's find the path by traversing toward documentation root dir
-    $pos = strlen($file);
-    while ($file != '')
+    if (dirname ($file) != '.')
     {
-      if ($this->fileExists ($file.'/index') !== false)
-        $breadcrumb [] = array (
-          'label' => $this->getPageTitle($file.'/index'),
-          'path'  => $file.'/index',
-      );
-
-      if ($this->fileExists ($file) !== false)
-        $breadcrumb [] = array (
-          'label' => $this->getPageTitle($file),
-          'path'  => $file,
-        );
-
-      $pos = strrpos ($file, '/');
-      $file = substr ($file, 0, $pos);
+      $breadcrumb = $breadcrumb + $this->getBreadcrumb ($this->getParentDirectory ($file.'/index'));
     }
 
+    $breadcrumb [] = array (
+      'label' => $this->getPageTitle($file),
+      'path'  => $file,
+    );
 
-    if ($this->fileExists ('/index') !== false)
-      $breadcrumb [] = array (
-        'label' => $this->getPageTitle('/index'),
-        'path'  => $file.'/index',
-      );
+    return $breadcrumb;
+  }
 
-
-    return array_reverse ($breadcrumb);
+  protected function getParentDirectory ($path)
+  {
+    print_r( substr ($path, 0, strrpos ($path, '/')));die;
+    return substr ($path, 0, strrpos ($path, '/'));
   }
 
 }

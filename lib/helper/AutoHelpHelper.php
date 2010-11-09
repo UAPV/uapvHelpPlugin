@@ -35,7 +35,7 @@ function help_link ($label = 'help')
 function link_to_help ($name, $doc_uri, $options = array ())
 {
   $helpFinder = new uapvHelpFinder (sfContext::getInstance ());
-  $baseUrl = $helpFinder->generateUrl ($uri);
+  $baseUrl = $helpFinder->generateUrl ($doc_uri);
   return link_to ($name, $baseUrl.$doc_uri, $options);
 }
 
