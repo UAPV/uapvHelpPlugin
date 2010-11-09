@@ -105,12 +105,12 @@ Redirecting a user to an external documentation
 
 If some or all of your document are already stored somewhere else, you will need can add exceptions by editing your app.yml
 
-all:
-  help:
-    external:
-      ";account/*/edit;" : http://dosi.univ-avignon.fr/foobar
-      ";admin/.*;" : https://github.com/UAPV/uapvHelpPlugin/blob/master/README.mkd
-      ";.*;" : http://dosi.univ-avignon.fr
+    all:
+      help:
+        external:
+          ";account/*/edit;" : http://dosi.univ-avignon.fr/foobar
+          ";admin/.*;" : https://github.com/UAPV/uapvHelpPlugin/blob/master/README.mkd
+          ";.*;" : http://dosi.univ-avignon.fr
 
 The 'app_help_external' parameter is an array of URL corresponding to patterns (compatibles with 'preg_match()').
 This patterns will be compared with the current PATH_INFO url. If there is the match and if the user tries to
