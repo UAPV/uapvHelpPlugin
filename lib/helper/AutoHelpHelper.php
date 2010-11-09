@@ -7,17 +7,15 @@
 function help_link ($label = 'help')
 {
   $context = sfContext::getInstance ();
-  $module  = $context->getModuleName ();
-  $action  = $context->getActionName ();
 
   // check if there is a doc file for this module/action
   $helpFinder = new uapvHelpFinder ($context);
-  if (($url = $helpFinder->resolve ($module.'/'.$action)) !== null)
+  if (($url = $helpFinder->getHelpUrl()) !== null)
   {
-    $context->getResponse()->addStyleSheet ('/uapvHelpPlugin/css/widget.css', sfWebResponse::FIRST);
-    return '<div id="help">'.link_to_help ($label, $url).'</div>';
+    $context->getResponse()->addStyleSheet ('/uapvHelpPlugin/css/widget.css', sfWebResponse::LAST);
+    return '<div id="help">'.link_to ($label, $url, array ('target' => '_blank')).'</div>';
   }
- 
+
   return '';
 }
 
@@ -35,8 +33,7 @@ function help_link ($label = 'help')
 function link_to_help ($name, $doc_uri, $options = array ())
 {
   $helpFinder = new uapvHelpFinder (sfContext::getInstance ());
-  $baseUrl = $helpFinder->generateUrl ($doc_uri);
-  return link_to ($name, $baseUrl.$doc_uri, $options);
+  return link_to ($name, $helpFinder->generateUrl ($doc_uri), $options);
 }
 
 function include_help_partial_if_exists ($templateName)

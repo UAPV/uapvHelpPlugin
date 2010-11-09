@@ -13,7 +13,11 @@ class uapvHelpPageActions extends sfActions
   protected function returnPage ($filename)
   {
     $this->helpFinder = new uapvHelpFinder ($this->getContext ());
-    $this->forward404Unless ($this->helpFinder->fileExists ($filename));
+
+    $filename = $this->helpFinder->fileExists ($filename) ? $filename : (
+                $this->helpFinder->fileExists ($filename.'/index') ? $filename.'/index' : null );
+
+    $this->forward404If ($filename === null);
 
     $this->breadcrumb = $this->helpFinder->getBreadcrumb ($filename);
 

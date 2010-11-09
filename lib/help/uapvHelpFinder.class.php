@@ -61,7 +61,31 @@ class uapvHelpFinder {
   }
 
   /**
-   * Find the documentation file corresponding to a module and(?) action
+   * Return the help url associated to the current context.
+   * Return null if not found.
+   *
+   * @return string or null
+   */
+  public function getHelpUrl ()
+  {
+    $module  = $this->context->getModuleName ();
+    $action  = $this->context->getActionName ();
+
+    $requestUrl = $this->context->getRequest()->getPathInfo ();
+    foreach (sfConfig::get ('app_help_external', array ()) as $pattern => $url)
+    {
+      if (preg_match ($pattern, $requestUrl) === 1)
+        return $url;
+    }
+
+    // check if there is a doc file for this module/action
+    $url = $this->resolve ($module.'/'.$action);
+
+    return ($url !== null ? $this->generateUrl ($url) : null);
+  }
+
+  /**
+   * Find the documentation file corresponding to a module and(?) action in *any* language
    *
    * @param string $file    By convention : 'module_name/action_name' (without .mkd)
    *
@@ -69,27 +93,47 @@ class uapvHelpFinder {
    */
   public function resolve ($file)
   {
-    if ($this->fileExists ($file) !== false)
-      return $file;
+    foreach ($this->languages as $lang)
+    {
+      $filename = "$lang/$file";
 
-    if ($file == 'index')
+      // if $file is a directory, we try find an index file inside
+      if ($this->directoryExists ($filename) && $this->fileExists ($filename.'/index'))
+        return $filename.'/index';
+
+      // if $file is a file we've got what we were searching for !
+      else if ($this->fileExists ($filename))
+        return $filename;
+    }
+
+    // if we reached the documentation root dir it means that there is no documentation
+    if (dirname ($file) == '.' && basename ($file) == 'index')
       return null;
 
-    if ($this->fileExists ($file.'/index') !== false)
-      return $file.'/index';
-
-    return $this->resolve ($this->getParentDirectory ($file));
+    // if we are here we didn't find a file in the current directory, let's go up !
+    return $this->resolve (dirname ($this->getParentDirectory ($file)).'/index');
   }
 
   /**
    * Checks if a file exists in any language
-   * 
+   *
    * @param string $file
    * @return string or false if not found
    */
   public function fileExists ($file)
   {
-    return file_exists ($this->getAbsolutePath ($file));
+    return is_file ($this->getAbsolutePath ($file));
+  }
+
+  /**
+   * Checks if a file exists in any language
+   *
+   * @param string $file
+   * @return string or false if not found
+   */
+  public function directoryExists ($file)
+  {
+    return is_dir ($this->getAbsolutePath ($file));
   }
 
   /**
@@ -127,6 +171,8 @@ class uapvHelpFinder {
   }
 
   /**
+   * Extract the page title from the markdown file
+   *
    * @param  $page
    * @return string
    */
@@ -144,26 +190,41 @@ class uapvHelpFinder {
       return ucfirst (basename ($page));
   }
 
+  /**
+   * Return a breadcrumb from the file $file to the documentation root dirs
+   *
+   * @param  $file
+   * @return array
+   */
   public function getBreadcrumb ($file)
   {
-    $breadcrumb = array ();
-
     if (dirname ($file) != '.')
     {
-      $breadcrumb = $breadcrumb + $this->getBreadcrumb ($this->getParentDirectory ($file.'/index'));
+      if (basename ($file) == 'index')
+        $breadcrumb = $this->getBreadcrumb (dirname ($this->getParentDirectory ($file)).'/index');
+      else
+        $breadcrumb = $this->getBreadcrumb (dirname ($file).'/index');
     }
+    else
+      $breadcrumb = array ();
 
-    $breadcrumb [] = array (
-      'label' => $this->getPageTitle($file),
-      'path'  => $file,
-    );
+    if ($this->fileExists($file))
+      $breadcrumb [] = array (
+        'label' => $this->getPageTitle($file),
+        'path'  => $file,
+      );
 
     return $breadcrumb;
   }
 
+  /**
+   * Return the parent directory of the current directory
+   *
+   * @param  $path
+   * @return string
+   */
   protected function getParentDirectory ($path)
   {
-    print_r( substr ($path, 0, strrpos ($path, '/')));die;
     return substr ($path, 0, strrpos ($path, '/'));
   }
 

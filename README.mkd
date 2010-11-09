@@ -103,14 +103,18 @@ This file can use markdown syntax.
 Redirecting a user to an external documentation
 -----------------------------------------------
 
-If some or all of your document is already stored somewhere else, you will need can add exceptions by editing your app.yml
+If some or all of your document are already stored somewhere else, you will need can add exceptions by editing your app.yml
 
 all:
   help:
     external:
-      "account/*/edit" : http://dosi.univ-avignon.fr/foobar
-      "admin/*" : https://github.com/UAPV/uapvHelpPlugin/blob/master/README.mkd
-      "*" : http://dosi.univ-avignon.fr
+      ";account/*/edit;" : http://dosi.univ-avignon.fr/foobar
+      ";admin/.*;" : https://github.com/UAPV/uapvHelpPlugin/blob/master/README.mkd
+      ";.*;" : http://dosi.univ-avignon.fr
+
+The 'app_help_external' parameter is an array of URL corresponding to patterns (compatibles with 'preg_match()').
+This patterns will be compared with the current PATH_INFO url. If there is the match and if the user tries to
+open the help for the current page, he will be redirected to the url associated to the pattern.
 
 
 Creating a documentation index
