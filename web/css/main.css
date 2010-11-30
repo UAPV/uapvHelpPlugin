@@ -108,8 +108,11 @@ p {
 }
 
 #doc_toc ul {
-  margin-top: 0;
-  margin-bottom: 0;
+  margin: 0 10px;
+}
+
+#doc_toc li {
+  list-style: none;
 }
 
 #doc_footer {
