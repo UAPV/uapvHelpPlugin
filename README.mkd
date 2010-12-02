@@ -117,6 +117,19 @@ This patterns will be compared with the current PATH_INFO url. If there is the m
 open the help for the current page, he will be redirected to the url associated to the pattern.
 
 
+Adding documentation assets
+---------------------------
+
+__THIS IS NOT IMPLEMENTED YET__
+
+You may need to add images or link static files on your pages, in this case put your images along with your markdown files and
+use the `help_public_path()` or `help_image_tag()` : 
+
+    ![my image](<?php echo help_public_path ('image.png') ?>)
+    // equivalent to
+    <?php echo help_image_tag('image.png') ?>
+
+
 Creating a documentation index
 ------------------------------
 
