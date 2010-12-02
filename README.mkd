@@ -96,7 +96,7 @@ Then use this link helper :
 Adding a header and footer on every page
 ----------------------------------------
 
-Add a file named "_header.mkd" or "_footer.mkd" in your doc/[lang]/ directory.
+Add a file named "\_header.mkd" or "\_footer.mkd" in your doc/[lang]/ directory.
 This file can use markdown syntax.
 
 
