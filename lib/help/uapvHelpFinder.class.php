@@ -91,14 +91,14 @@ class uapvHelpFinder {
    *
    * @return string or null if not found
    */
-  public function resolve ($file)
+  public function resolve ($file, $exactMatch = false)
   {
     foreach ($this->languages as $lang)
     {
       $filename = "$lang/$file";
 
       // if $file is a directory, we try find an index file inside
-      if ($this->directoryExists ($filename) && $this->fileExists ($filename.'/index'))
+      if (!$exactMatch && $this->directoryExists ($filename) && $this->fileExists ($filename.'/index'))
         return $filename.'/index';
 
       // if $file is a file we've got what we were searching for !
@@ -106,8 +106,12 @@ class uapvHelpFinder {
         return $filename;
     }
 
+    // If we want an exact match there is no need to continue
+    if ($exactMatch)
+      return null;
+
     // if we reached the documentation root dir it means that there is no documentation
-    if (dirname ($file) == '.' && basename ($file) == 'index')
+    if (in_array (dirname ($file), array('.','/')) && basename ($file) == 'index')
       return null;
 
     // if we are here we didn't find a file in the current directory, let's go up !
@@ -182,7 +186,7 @@ class uapvHelpFinder {
 
     $matches = array ();
     if (preg_match('{^(.+?)[ ]*\n=+[ ]*}mx', $pageContent, $matches)     == 1 || // Setext style (undescored with "=")
-        preg_match ('{^\#[ ]*(.+?)[ ]*\#$\n+}xm', $pageContent, $matches) == 1 ) // atx style ("# title")
+        preg_match ('{^\#[ ]*(.+?)[ ]*\#*\n+}xm', $pageContent, $matches) == 1 ) // atx style ("# title")
     {
       return $matches[1];
     }
@@ -198,7 +202,7 @@ class uapvHelpFinder {
    */
   public function getBreadcrumb ($file)
   {
-    if (dirname ($file) != '.')
+    if (dirname ($file) != '.' && dirname ($file) != '/')
     {
       if (basename ($file) == 'index')
         $breadcrumb = $this->getBreadcrumb (dirname ($this->getParentDirectory ($file)).'/index');
@@ -211,7 +215,7 @@ class uapvHelpFinder {
     if ($this->fileExists($file))
       $breadcrumb [] = array (
         'label' => $this->getPageTitle($file),
-        'path'  => $file,
+        'path'  => substr ($file, strpos ($file, '/') + 1), // remove the first directory (lang)
       );
 
     return $breadcrumb;

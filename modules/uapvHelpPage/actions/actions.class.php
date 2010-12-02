@@ -19,6 +19,8 @@ class uapvHelpPageActions extends sfActions
 
     $this->forward404If ($filename === null);
 
+    $this->getContext()->getConfiguration()->loadHelpers(array('Helper', 'Url', 'Asset', 'Tag', 'Escaping', 'AutoHelp'));
+
     $this->breadcrumb = $this->helpFinder->getBreadcrumb ($filename);
 
     // TODO : refactor markdown parsing !

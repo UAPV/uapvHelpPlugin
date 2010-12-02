@@ -11,10 +11,7 @@ function help_link ($label = 'help')
   // check if there is a doc file for this module/action
   $helpFinder = new uapvHelpFinder ($context);
   if (($url = $helpFinder->getHelpUrl()) !== null)
-  {
-    $context->getResponse()->addStyleSheet ('/uapvHelpPlugin/css/widget.css', sfWebResponse::LAST);
     return '<div id="help">'.link_to ($label, $url, array ('target' => '_blank')).'</div>';
-  }
 
   return '';
 }
@@ -32,21 +29,26 @@ function help_link ($label = 'help')
  */
 function link_to_help ($name, $doc_uri, $options = array ())
 {
+  return link_to ($name, url_for_help ($doc_uri), $options);
+}
+
+function url_for_help ($doc_uri)
+{
   $helpFinder = new uapvHelpFinder (sfContext::getInstance ());
-  return link_to ($name, $helpFinder->generateUrl ($doc_uri), $options);
+  return $helpFinder->generateUrl ($helpFinder->resolve($doc_uri));
 }
 
 function include_help_partial_if_exists ($templateName)
 {
   $helpFinder = new uapvHelpFinder (sfContext::getInstance ());
-  return ($helpFinder->fileExists ($templateName) !== false ? include_help_partial ($templateName) : '');
+  return ($helpFinder->fileExists ($helpFinder->resolve ($templateName, true)) !== false ? include_help_partial ($templateName) : '');
 }
 
 function include_help_partial ($templateName)
 {
   $helpFinder = new uapvHelpFinder (sfContext::getInstance ());
-  $helpFinder->fileExists ($templateName);
-  $view = new uapvMarkdownPartialView (sfContext::getInstance (), 'uapvHelpPage', $helpFinder->getAbsolutePath ($templateName), '');
+  $templateName = $helpFinder->resolve ($templateName);
+  $view = new uapvMarkdownPartialView (sfContext::getInstance (), 'uapvHelpPage', $templateName.'.mkd', '');
   $view->setDirectory ($helpFinder->getHelpRootDir ());
   return $view->render();
 }
