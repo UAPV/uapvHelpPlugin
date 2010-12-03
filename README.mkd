@@ -120,14 +120,19 @@ open the help for the current page, he will be redirected to the url associated 
 Adding documentation assets
 ---------------------------
 
-__THIS IS NOT IMPLEMENTED YET__
+You may need to add images or link static files on your documentation. To do this, place all your files along with
+your markdown documentation and run :
 
-You may need to add images or link static files on your pages, in this case put your images along with your markdown files and
-use the `help_public_path()` or `help_image_tag()` : 
+    symfony doc:publish-assets // __NOT IMPLEMENTED YET__
+
+Then use the `help_public_path()` or `help_image_tag()` helper to display images in your documentation. For example, if
+you have 'image.png' in the same directory as your markdown documentation use a relative URL.
 
     ![my image](<?php echo help_public_path ('image.png') ?>)
     // equivalent to
     <?php echo help_image_tag('image.png') ?>
+
+You can also use absolute URL, ex: /user/create_form.png
 
 
 Creating a documentation index

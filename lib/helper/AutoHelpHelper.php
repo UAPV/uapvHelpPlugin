@@ -38,17 +38,63 @@ function url_for_help ($doc_uri)
   return $helpFinder->generateUrl ($helpFinder->resolve($doc_uri));
 }
 
+/**
+ * Include a markdown partial if it exists
+ *
+ * @param  string $templateName     ex: user/delete
+ * @return string
+ */
 function include_help_partial_if_exists ($templateName)
 {
   $helpFinder = new uapvHelpFinder (sfContext::getInstance ());
   return ($helpFinder->fileExists ($helpFinder->resolve ($templateName, true)) !== false ? include_help_partial ($templateName) : '');
 }
 
+/**
+ * Include a partial in the mardown format
+ *
+ * @param  string $templateName     ex: user/delete
+ * @return string
+ */
 function include_help_partial ($templateName)
 {
   $helpFinder = new uapvHelpFinder (sfContext::getInstance ());
-  $templateName = $helpFinder->resolve ($templateName);
+  $templateName = $helpFinder->resolve ($templateName, true);
   $view = new uapvMarkdownPartialView (sfContext::getInstance (), 'uapvHelpPage', $templateName.'.mkd', '');
   $view->setDirectory ($helpFinder->getHelpRootDir ());
   return $view->render();
+}
+
+/**
+ * Return an url to access documentation static files
+ *
+ * @param  $uri
+ * @return string
+ */
+function help_public_path ($uri)
+{
+  $context = sfContext::getInstance ();
+  $rootDir = $context->getConfiguration ()->getApplication ().'/';
+
+  if (empty ($uri))
+    return;
+
+  if ($uri[0] != '/') // We've got an relative URL
+    $rootDir .= dirname ($context->getRequest()->getParameter ('file')).'/';
+
+  return public_path ('/doc_assets/'.$rootDir.$uri);
+}
+
+/**
+ * Return an image tag in the markdown syntax
+ *
+ * @param string $uri  relative or absolute uri (from the language document root)
+ * @param string $title
+ *
+ * @return string Markdown image tag
+ */
+function help_image_tag ($uri, $title = '')
+{
+
+  return ' !['.$title.']('.help_public_path($uri).') ';
 }
